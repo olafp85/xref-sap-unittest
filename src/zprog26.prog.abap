@@ -1,0 +1,6 @@
+REPORT zprog26.
+
+INCLUDE zincl26.
+
+START-OF-SELECTION.
+  PERFORM form.
