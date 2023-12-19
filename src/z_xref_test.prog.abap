@@ -11,7 +11,7 @@ CLASS ltcl_unit DEFINITION
 
   PROTECTED SECTION.
     DATA:
-      mo_task TYPE REF TO lcl_task,
+      mo_main TYPE REF TO lcl_main,
       mo_unit TYPE REF TO lcl_unit.
 
     METHODS:
@@ -39,7 +39,7 @@ CLASS ltcl_unit IMPLEMENTATION.
 
   METHOD constructor.
     "De SETUP-methode moet in elke subklasse opnieuw gedefinieerd worden, de CONSTRUCTOR niet
-    mo_task = NEW #( ).
+    mo_main = NEW #( ).
   ENDMETHOD.
 
   METHOD set_unit.
@@ -626,7 +626,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD called_by_form.
     set_unit( `FUNC|ZFUNC21` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`   target = `\FG:ZFUGR2\FU:ZFUNC21` )
                             ( source = `\FG:ZFUGR2\FO:FORM`   target = `\FG:ZFUGR2\FU:ZFUNC21` )
@@ -636,7 +636,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD called_by_function.
     set_unit( `FUNC|ZFUNC22` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\FG:ZFUGR2\FU:ZFUNC22` ) ) ).
   ENDMETHOD.
@@ -644,7 +644,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD called_by_method.
     set_unit( `FUNC|ZFUNC23` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\FG:ZFUGR2\FU:ZFUNC23` ) ) ).
   ENDMETHOD.
@@ -652,7 +652,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD called_by_program.
     set_unit( `FUNC|ZFUNC24` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\FG:ZFUGR2\FU:ZFUNC24` ) ) ).
   ENDMETHOD.
@@ -660,7 +660,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD calls_form.
     set_unit( `FUNC|ZFUNC21` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\FG:ZFUGR2\FO:FORM` )
                             ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\FG:ZFUGR3\FO:FORM` )
@@ -670,7 +670,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD calls_function.
     set_unit( `FUNC|ZFUNC22` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC22`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
   ENDMETHOD.
@@ -678,7 +678,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD calls_method.
     set_unit( `FUNC|ZFUNC23` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC23`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
   ENDMETHOD.
@@ -686,7 +686,7 @@ CLASS ltcl_func IMPLEMENTATION.
   METHOD calls_program.
     set_unit( `FUNC|ZFUNC24` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC24`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
@@ -716,7 +716,7 @@ CLASS ltcl_fugr IMPLEMENTATION.
   METHOD calls.
     set_unit( `FUGR|ZFUGR2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM`    target = `\FG:ZFUGR2\FO:FORM1` )
                             ( source = `\FG:ZFUGR2\FO:FORM`    target = `\FG:ZFUGR2\FU:ZFUNC21` )
@@ -737,7 +737,7 @@ CLASS ltcl_fugr IMPLEMENTATION.
   METHOD called_by.
     set_unit( `FUGR|ZFUGR2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls(
                             ( source = `\FG:ZFUGR1\FO:FORM`     target = `\FG:ZFUGR2\FO:FORM1` )
@@ -787,7 +787,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD called_by_form.
     set_unit( `FUGR|ZFUGR2|FORM1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`   target = `\FG:ZFUGR2\FO:FORM1` )
                             ( source = `\FG:ZFUGR2\FO:FORM`   target = `\FG:ZFUGR2\FO:FORM1` )
@@ -797,7 +797,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD called_by_function.
     set_unit( `FUGR|ZFUGR2|FORM2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\FG:ZFUGR2\FO:FORM2` ) ) ).
   ENDMETHOD.
@@ -805,7 +805,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD called_by_method.
     set_unit( `FUGR|ZFUGR2|FORM3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\FG:ZFUGR2\FO:FORM3` ) ) ).
   ENDMETHOD.
@@ -813,7 +813,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD called_by_program.
     set_unit( `FUGR|ZFUGR2|FORM4` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\FG:ZFUGR2\FO:FORM4` ) ) ).
   ENDMETHOD.
@@ -821,7 +821,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD calls_form.
     set_unit( `FUGR|ZFUGR2|FORM1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM1`  target = `\FG:ZFUGR2\FO:FORM` )
                             ( source = `\FG:ZFUGR2\FO:FORM1`  target = `\FG:ZFUGR3\FO:FORM` )
@@ -831,7 +831,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD calls_function.
     set_unit( `FUGR|ZFUGR2|FORM2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM2`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
   ENDMETHOD.
@@ -839,7 +839,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD calls_method.
     set_unit( `FUGR|ZFUGR2|FORM3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM3`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
   ENDMETHOD.
@@ -847,7 +847,7 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
   METHOD calls_program.
     set_unit( `FUGR|ZFUGR2|FORM4` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM4`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
@@ -883,7 +883,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD called_by_form.
     set_unit( `CLAS|ZCLASS2|METHOD1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`   target = `\TY:ZCLASS2\ME:METHOD1` )
                             ( source = `\PR:ZPROG1F\FO:FORM`  target = `\TY:ZCLASS2\ME:METHOD1` ) ) ).
@@ -892,7 +892,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD called_by_function.
     set_unit( `CLAS|ZCLASS2|METHOD2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\TY:ZCLASS2\ME:METHOD2` ) ) ).
   ENDMETHOD.
@@ -900,7 +900,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD called_by_method.
     set_unit( `CLAS|ZCLASS2|METHOD3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\TY:ZCLASS2\ME:METHOD3` )
                             ( source = `\TY:ZCLASS2\ME:METHOD`  target = `\TY:ZCLASS2\ME:METHOD3` ) ) ).
@@ -909,7 +909,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD called_by_program.
     set_unit( `CLAS|ZCLASS2|METHOD4` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1` target = `\TY:ZCLASS2\ME:METHOD4` ) ) ).
   ENDMETHOD.
@@ -917,7 +917,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD calls_form.
     set_unit( `CLAS|ZCLASS2|METHOD1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS2\ME:METHOD1`  target = `\FG:ZFUGR3\FO:FORM` )
                             ( source = `\TY:ZCLASS2\ME:METHOD1`  target = `\PR:ZPROG3F\FO:FORM` ) ) ).
@@ -926,7 +926,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD calls_function.
     set_unit( `CLAS|ZCLASS2|METHOD2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS2\ME:METHOD2`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
   ENDMETHOD.
@@ -934,7 +934,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD calls_method.
     set_unit( `CLAS|ZCLASS2|METHOD3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS2\ME:METHOD3`  target = `\TY:ZCLASS2\ME:METHOD` )
                             ( source = `\TY:ZCLASS2\ME:METHOD3`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
@@ -943,7 +943,7 @@ CLASS ltcl_meth IMPLEMENTATION.
   METHOD calls_program.
     set_unit( `CLAS|ZCLASS2|METHOD4` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS2\ME:METHOD4`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
@@ -979,7 +979,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD called_by_form.
     set_unit( `PROG|ZPROG21` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`   target = `\PR:ZPROG21` )
                             ( source = `\PR:ZPROG1F\FO:FORM`  target = `\PR:ZPROG21` )
@@ -989,7 +989,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD called_by_function.
     set_unit( `PROG|ZPROG22` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\PR:ZPROG22` ) ) ).
   ENDMETHOD.
@@ -997,7 +997,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD called_by_method.
     set_unit( `PROG|ZPROG23` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\PR:ZPROG23` ) ) ).
   ENDMETHOD.
@@ -1005,7 +1005,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD called_by_program.
     set_unit( `PROG|ZPROG24` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\PR:ZPROG24` ) ) ).
   ENDMETHOD.
@@ -1013,7 +1013,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD calls_form.
     set_unit( `PROG|ZPROG21` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG21`  target = `\FG:ZFUGR3\FO:FORM` )
                             ( source = `\PR:ZPROG21`  target = `\PR:ZPROG21\FO:FORM` )
@@ -1023,7 +1023,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD calls_function.
     set_unit( `PROG|ZPROG22` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG22`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
   ENDMETHOD.
@@ -1031,7 +1031,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD calls_method.
     set_unit( `PROG|ZPROG23` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG23`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
   ENDMETHOD.
@@ -1039,7 +1039,7 @@ CLASS ltcl_prog IMPLEMENTATION.
   METHOD calls_program.
     set_unit( `PROG|ZPROG24` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG24`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
@@ -1075,7 +1075,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD called_by_form.
     set_unit( `PROG|ZPROG21F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`        target = `\PR:ZPROG21F\FO:FORM` )
                             ( source = `\PR:ZPROG1F\FO:FORM`       target = `\PR:ZPROG21F\FO:FORM` )
@@ -1085,7 +1085,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD called_by_function.
     set_unit( `PROG|ZPROG22F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\PR:ZPROG22F\FO:FORM` ) ) ).
   ENDMETHOD.
@@ -1093,7 +1093,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD called_by_method.
     set_unit( `PROG|ZPROG23F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\PR:ZPROG23F\FO:FORM` ) ) ).
   ENDMETHOD.
@@ -1101,7 +1101,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD called_by_program.
     set_unit( `PROG|ZPROG24F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\PR:ZPROG24F\FO:FORM` ) ) ).
   ENDMETHOD.
@@ -1109,7 +1109,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD calls_form.
     set_unit( `PROG|ZPROG21F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG21F\FO:FORM`  target = `\FG:ZFUGR3\FO:FORM` )
                             ( source = `\PR:ZPROG21F\FO:FORM`  target = `\PR:ZPROG21F\FO:SUBFORM` )
@@ -1119,7 +1119,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD calls_function.
     set_unit( `PROG|ZPROG22F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG22F\FO:FORM`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
   ENDMETHOD.
@@ -1127,7 +1127,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD calls_method.
     set_unit( `PROG|ZPROG23F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG23F\FO:FORM`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
   ENDMETHOD.
@@ -1135,7 +1135,7 @@ CLASS ltcl_prog_form IMPLEMENTATION.
   METHOD calls_program.
     set_unit( `PROG|ZPROG24F|FORM` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG24F\FO:FORM`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
@@ -1171,7 +1171,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD called_by_form.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\FO:FORM`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD1` ) ) ).
   ENDMETHOD.
@@ -1183,7 +1183,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD called_by_method.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS1\ME:METHOD`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD3` )
                             ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD3` ) ) ).
@@ -1192,7 +1192,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD called_by_program.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD4` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD4` ) ) ).
   ENDMETHOD.
@@ -1200,7 +1200,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD calls_form.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD1`  target = `\FG:ZFUGR3\FO:FORM` )
                             ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD1`  target = `\PR:ZPROG25\FO:FORM` )
@@ -1210,7 +1210,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD calls_function.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD2` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD2`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
   ENDMETHOD.
@@ -1218,7 +1218,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD calls_method.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD3`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD` )
                             ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD3`  target = `\PR:ZPROG25\TY:LCLASS3\ME:METHOD` )
@@ -1228,7 +1228,7 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
   METHOD calls_program.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD4` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD4`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
@@ -1252,7 +1252,7 @@ CLASS ltcl_specials DEFINITION
       interfaces FOR TESTING,
       local_classes FOR TESTING,
       local_interfaces FOR TESTING,
-      include_sap_calls FOR TESTING.
+      include_sap_objects FOR TESTING.
 
 ENDCLASS.
 
@@ -1263,7 +1263,7 @@ CLASS ltcl_specials IMPLEMENTATION.
   METHOD includes.
     set_unit( `PROG|ZPROG26` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1\FO:FORM`   target = `\PR:ZPROG26\FO:FORM1` )
@@ -1274,7 +1274,7 @@ CLASS ltcl_specials IMPLEMENTATION.
   METHOD inheritance.
     set_unit( `CLAS|ZCLASS4A` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS4A\ME:CONSTRUCTOR`  target = `\FG:ZFUGR3\FU:ZFUNC3` )
@@ -1288,7 +1288,7 @@ CLASS ltcl_specials IMPLEMENTATION.
   METHOD alias.
     set_unit( `CLAS|ZCLASS4B` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 0 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS4B\IN:ZINTERFACE4A\ME:METHOD1`  target = `\TY:ZCLASS4\IN:ZINTERFACE4A\ME:METHOD1` )  "komt er standaard bij, helaas
@@ -1305,7 +1305,7 @@ CLASS ltcl_specials IMPLEMENTATION.
   METHOD interfaces.
     set_unit( `CLAS|ZCLASS2|ZINTERFACE2~METHOD` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\IN:ZINTERFACE1\ME:METHOD`  target = `\TY:ZCLASS2\IN:ZINTERFACE2\ME:METHOD` )
@@ -1319,7 +1319,7 @@ CLASS ltcl_specials IMPLEMENTATION.
 
     set_unit( `CLAS|ZCLASS2|METHOD5` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS2\IN:ZINTERFACE2\ME:METHOD`  target = `\TY:ZCLASS2\ME:METHOD5` )
@@ -1333,13 +1333,13 @@ CLASS ltcl_specials IMPLEMENTATION.
   METHOD local_classes.
     set_unit( `CLAS|ZCLASS4|METHOD1` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS4\ME:METHOD1`  target = `\TY:ZCLASS4\TY:LCLASS\ME:METHOD` ) ) ).
 
     set_unit( `CLAS|ZCLASS4|\TY:LCLASS\ME:METHOD` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS4\ME:METHOD1`  target = `\TY:ZCLASS4\TY:LCLASS\ME:METHOD` ) ) ).
   ENDMETHOD.
@@ -1347,7 +1347,7 @@ CLASS ltcl_specials IMPLEMENTATION.
   METHOD local_interfaces.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\IN:LINTERFACE2\ME:METHOD` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS1\IN:LINTERFACE1\ME:METHOD`  target = `\PR:ZPROG25\TY:LCLASS2\IN:LINTERFACE2\ME:METHOD` )
@@ -1361,7 +1361,7 @@ CLASS ltcl_specials IMPLEMENTATION.
 
     set_unit( `\PR:ZPROG25\TY:LCLASS2\ME:METHOD5` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 1
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25\TY:LCLASS2\IN:LINTERFACE2\ME:METHOD`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD5` )
@@ -1372,21 +1372,21 @@ CLASS ltcl_specials IMPLEMENTATION.
                             ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD5`                target = `\PR:ZPROG25\TY:LINTERFACE3\ME:METHOD3` ) ) ).
   ENDMETHOD.
 
-  METHOD include_sap_calls.
+  METHOD include_sap_objects.
     set_unit( `PROG|ZPROG3` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 2
-                          include_sap_calls = abap_true )-calls
+                          include_sap_objects = abap_true )-calls
       exp = VALUE tt_calls( ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`  target = `\TY:CL_APCRFC_COMPRESSION_MODE\ME:INFO` )
                             ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`  target = `\TY:CL_COS_UTILITIES\ME:IS_S4H` )
                             ( source = `\PR:ZPROG3`                   target = `\FG:SRFC\FU:RFC_SYSTEM_INFO` ) ) ).
 
     set_unit( `FUNC|RFC_SYSTEM_INFO` ).
     cl_abap_unit_assert=>assert_equals(
-      act = mo_task->run( unit = mo_unit
+      act = mo_main->run( unit = mo_unit
                           depth_calls = 2
-                          include_sap_calls = abap_true )-calls
+                          include_sap_objects = abap_true )-calls
       exp = VALUE tt_calls( ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`     target = `\TY:CL_APCRFC_COMPRESSION_MODE\ME:INFO` )
                             ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`     target = `\TY:CL_COS_UTILITIES\ME:IS_S4H` )
                             ( source = `\TY:CL_COS_UTILITIES\ME:IS_S4H`  target = `\TY:CL_COS_UTILITIES\ME:VALIDATE_GV_S4H` ) ) ).
