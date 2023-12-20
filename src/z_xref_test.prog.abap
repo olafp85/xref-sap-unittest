@@ -361,7 +361,7 @@ CLASS ltcl_unit IMPLEMENTATION.
     set_unit( `PROG|ZPROG1` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_unit->get_package( )
-      exp = '$TMP' ).
+      exp = '$XREF_TEST' ).
 
     set_unit( `FUGR|DEMO_RFC` ).
     cl_abap_unit_assert=>assert_equals(
