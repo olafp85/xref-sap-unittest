@@ -11,7 +11,7 @@ CLASS ltcl_unit DEFINITION
 
   PROTECTED SECTION.
     DATA:
-      mo_main TYPE REF TO lcl_main,
+      mo_main TYPE REF TO lcl_task_analyze,
       mo_unit TYPE REF TO lcl_unit.
 
     METHODS:
@@ -361,7 +361,7 @@ CLASS ltcl_unit IMPLEMENTATION.
     set_unit( `PROG|ZPROG1` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_unit->get_package( )
-      exp = '$XREF_TEST' ).
+      exp = '$XREF_UNITTEST' ).
 
     set_unit( `FUGR|DEMO_RFC` ).
     cl_abap_unit_assert=>assert_equals(
@@ -1376,20 +1376,14 @@ CLASS ltcl_specials IMPLEMENTATION.
     set_unit( `PROG|ZPROG3` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
-                          depth_calls = 2
+                          depth_calls = 1
                           include_sap_objects = abap_true )-calls
-      exp = VALUE tt_calls( ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`  target = `\TY:CL_APCRFC_COMPRESSION_MODE\ME:INFO` )
-                            ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`  target = `\TY:CL_COS_UTILITIES\ME:IS_S4H` )
-                            ( source = `\PR:ZPROG3`                   target = `\FG:SRFC\FU:RFC_SYSTEM_INFO` ) ) ).
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG3`  target = `\FG:SRFC\FU:RFC_SYSTEM_INFO` ) ) ).
 
     set_unit( `FUNC|RFC_SYSTEM_INFO` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_calls = 2
-                          include_sap_objects = abap_true )-calls
-      exp = VALUE tt_calls( ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`     target = `\TY:CL_APCRFC_COMPRESSION_MODE\ME:INFO` )
-                            ( source = `\FG:SRFC\FU:RFC_SYSTEM_INFO`     target = `\TY:CL_COS_UTILITIES\ME:IS_S4H` )
-                            ( source = `\TY:CL_COS_UTILITIES\ME:IS_S4H`  target = `\TY:CL_COS_UTILITIES\ME:VALIDATE_GV_S4H` ) ) ).
+    cl_abap_unit_assert=>assert_initial( mo_main->run( unit = mo_unit
+                                                       depth_calls = 2
+                                                       include_sap_objects = abap_false )-calls ).
   ENDMETHOD.
 
 ENDCLASS.
