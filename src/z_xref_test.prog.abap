@@ -19,16 +19,14 @@ CLASS ltcl_unit DEFINITION
 
   PRIVATE SECTION.
     METHODS:
-      id FOR TESTING,
-      full_name FOR TESTING,
       get_component FOR TESTING,
       get_components FOR TESTING,
       get_include FOR TESTING,
-      get_name FOR TESTING,
       get_package FOR TESTING,
       get_program FOR TESTING,
       get_segment FOR TESTING,
       get_segments FOR TESTING,
+      init FOR TESTING,
       is_standard_sap FOR TESTING.
 
 ENDCLASS.
@@ -50,126 +48,6 @@ CLASS ltcl_unit IMPLEMENTATION.
     ELSE.
       mo_unit = lcl_units=>get_by_full_name( string ).
     ENDIF.
-  ENDMETHOD.
-
-  METHOD id.
-    "Klasse
-    set_unit( `CLAS|ZCLASS1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\TY:ZCLASS1` ).
-    DATA(lo_component) = mo_unit->get_component( 'METHOD' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->id
-      exp = `\TY:ZCLASS1\ME:METHOD` ).
-
-    "Interface
-    set_unit( `INTF|ZINTERFACE1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\TY:ZINTERFACE1` ).
-    lo_component = mo_unit->get_component( 'METHOD' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->id
-      exp = `\TY:ZINTERFACE1\ME:METHOD` ).
-
-    "Functie
-    set_unit( `FUNC|ZFUNC1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
-    set_unit( `FUGR|ZFUGR1|ZFUNC1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
-    set_unit( `\FG:ZFUGR1\FU:ZFUNC1` ).  "get_by_full_name
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
-
-    "Functiegroep
-    set_unit( `FUGR|ZFUGR1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\FG:ZFUGR1` ).
-    lo_component = mo_unit->get_component( 'ZFUNC1' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->id
-      exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
-    lo_component = mo_unit->get_component( 'FORM' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->id
-      exp = `\FG:ZFUGR1\FO:FORM` ).
-
-    "Programma
-    set_unit( `PROG|ZPROG1F` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->id
-      exp = `\PR:ZPROG1F` ).
-    lo_component = mo_unit->get_component( 'FORM' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->id
-      exp = `\PR:ZPROG1F\FO:FORM` ).
-  ENDMETHOD.
-
-  METHOD full_name.
-    "Klasse
-    set_unit( `CLAS|ZCLASS1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\TY:ZCLASS1` ).
-    DATA(lo_component) = mo_unit->get_component( 'METHOD' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->full_name
-      exp = `\TY:ZCLASS1\ME:METHOD` ).
-
-    "Interface
-    set_unit( `INTF|ZINTERFACE1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\TY:ZINTERFACE1` ).
-    lo_component = mo_unit->get_component( 'METHOD' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->full_name
-      exp = `\TY:ZINTERFACE1\ME:METHOD` ).
-
-    "Functie
-    set_unit( `FUNC|ZFUNC1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\FU:ZFUNC1` ).
-    set_unit( `FUGR|ZFUGR1|ZFUNC1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\FU:ZFUNC1` ).
-    set_unit( `\FG:ZFUGR1\FU:ZFUNC1` ).  "get_by_full_name
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\FU:ZFUNC1` ).
-
-    "Functiegroep
-    set_unit( `FUGR|ZFUGR1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\PR:SAPLZFUGR1` ).
-    lo_component = mo_unit->get_component( 'ZFUNC1' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->full_name
-      exp = `\FU:ZFUNC1` ).
-    lo_component = mo_unit->get_component( 'FORM' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->full_name
-      exp = `\PR:SAPLZFUGR1\FO:FORM` ).
-
-    "Programma
-    set_unit( `PROG|ZPROG1F` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->full_name
-      exp = `\PR:ZPROG1F` ).
-    lo_component = mo_unit->get_component( 'FORM' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->full_name
-      exp = `\PR:ZPROG1F\FO:FORM` ).
   ENDMETHOD.
 
   METHOD get_component.
@@ -304,54 +182,6 @@ CLASS ltcl_unit IMPLEMENTATION.
       exp = 'ZPROG1F' ).
   ENDMETHOD.
 
-  METHOD get_name.
-    "Klasse
-    set_unit( `CLAS|ZCLASS1` ).
-    DATA(lo_component) = mo_unit->get_component( 'METHOD' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->get_name( )
-      exp = 'ZCLASS1' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->get_name( )
-      exp = 'ZCLASS1' ).
-
-    "Interface
-    set_unit( `INTF|ZINTERFACE1` ).
-    lo_component = mo_unit->get_component( 'METHOD' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->get_name( )
-      exp = 'ZINTERFACE1' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->get_name( )
-      exp = 'ZINTERFACE1' ).
-
-    "Functie
-    set_unit( `FUNC|ZFUNC1` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->get_name( )
-      exp = 'ZFUNC1' ).
-
-    "Functiegroep
-    set_unit( `FUGR|ZFUGR1` ).
-    lo_component = mo_unit->get_component( 'FORM' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->get_name( )
-      exp = 'ZFUGR1' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->get_name( )
-      exp = 'ZFUGR1' ).
-
-    "Programma
-    set_unit( `PROG|ZPROG1F` ).
-    lo_component = mo_unit->get_component( 'FORM' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_unit->get_name( )
-      exp = 'ZPROG1F' ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_component->get_name( )
-      exp = 'ZPROG1F' ).
-  ENDMETHOD.
-
   METHOD get_package.
     set_unit( `PROG|BCALV_GRID_DEMO` ).
     cl_abap_unit_assert=>assert_equals(
@@ -422,7 +252,7 @@ CLASS ltcl_unit IMPLEMENTATION.
     set_unit( `CLAS|ZCLASS1` ).
     DATA(lo_component) = mo_unit->get_component( 'METHOD' ).
     cl_abap_unit_assert=>assert_equals(
-      act = lo_component->get_segment( 'TY' )
+      act = lo_component->get_segment( cl_abap_compiler=>tag_type )
       exp = 'ZCLASS1' ).
 
     "Functie
@@ -476,6 +306,151 @@ CLASS ltcl_unit IMPLEMENTATION.
                                           ( name = `TY` value = `LCLASS2` )
                                           ( name = `IN` value = `LINTERFACE2` )
                                           ( name = `ME` value = `METHOD` ) ) ).
+  ENDMETHOD.
+
+  METHOD init.
+    "Klasse
+    set_unit( `CLAS|ZCLASS1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZCLASS1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZCLASS1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `CLAS` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZCLASS1' ).
+
+    set_unit( `\TY:ZCLASS1` ).  "GET_BY_FULL_NAME
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZCLASS1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZCLASS1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `CLAS` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZCLASS1' ).
+
+    "Methode
+    DATA(lo_component) = mo_unit->get_component( 'METHOD' ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->id           exp = `\TY:ZCLASS1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->full_name    exp = `\TY:ZCLASS1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->type         exp = `CLAS` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->get_name( )  exp = 'ZCLASS1' ).
+
+    set_unit( `\TY:ZCLASS1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZCLASS1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZCLASS1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `CLAS` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZCLASS1' ).
+
+    "Interface
+    set_unit( `INTF|ZINTERFACE1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZINTERFACE1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZINTERFACE1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `INTF` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZINTERFACE1' ).
+
+    set_unit( `\TY:ZINTERFACE1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZINTERFACE1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZINTERFACE1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `INTF` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZINTERFACE1' ).
+
+    "Methode
+    lo_component = mo_unit->get_component( 'METHOD' ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->id           exp = `\TY:ZINTERFACE1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->full_name    exp = `\TY:ZINTERFACE1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->type         exp = `INTF` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->get_name( )  exp = 'ZINTERFACE1' ).
+
+    set_unit( `\TY:ZINTERFACE1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZINTERFACE1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZINTERFACE1\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `INTF` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZINTERFACE1' ).
+
+    "Functiegroep
+    set_unit( `FUGR|ZFUGR1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\FG:ZFUGR1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\PR:SAPLZFUGR1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `FUGR` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZFUGR1' ).
+
+    lo_component = mo_unit->get_component( 'FORM' ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->id           exp = `\FG:ZFUGR1\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->full_name    exp = `\PR:SAPLZFUGR1\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->type         exp = `FUGR` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->get_name( )  exp = 'ZFUGR1' ).
+
+    set_unit( `\FG:ZFUGR1\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\FG:ZFUGR1\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\PR:SAPLZFUGR1\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `FUGR` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZFUGR1' ).
+
+    "Functie
+    set_unit( `FUNC|ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `FUNC` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZFUNC1' ).
+
+    set_unit( `FUGR|ZFUGR1|ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `FUNC` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZFUNC1' ).
+
+    set_unit( `FUGR|ZFUGR1` ).
+    lo_component = mo_unit->get_component( 'ZFUNC1' ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->id           exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->full_name    exp = `\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->type         exp = `FUNC` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->get_name( )  exp = 'ZFUNC1' ).
+
+    set_unit( `\FG:ZFUGR1\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\FG:ZFUGR1\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\FU:ZFUNC1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `FUNC` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZFUNC1' ).
+
+    "Programma
+    set_unit( `PROG|ZPROG1F` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\PR:ZPROG1F` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\PR:ZPROG1F` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `PROG` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZPROG1F' ).
+
+    lo_component = mo_unit->get_component( 'FORM' ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->id           exp = `\PR:ZPROG1F\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->full_name    exp = `\PR:ZPROG1F\FO:FORM` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->type         exp = `PROG` ).
+    cl_abap_unit_assert=>assert_equals( act = lo_component->get_name( )  exp = 'ZPROG1F' ).
+
+    "CDS
+    set_unit( `DDLS|ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:zCdsView1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `DDLS` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZCDSVIEW1' ).
+
+    set_unit( `\TY:ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:zCdsView1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `DDLS` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZCDSVIEW1' ).
+
+    "Tabel
+    set_unit( `TABL|ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `TABL` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZTAB1' ).
+
+    set_unit( `\TY:ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `TABL` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZTAB1' ).
+
+    "Methode GET_BY_FULL_NAME doet geen controle op het bestaan van het object
+    set_unit( `\TY:UNKNOWN` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:UNKNOWN` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:UNKNOWN` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'UNKNOWN' ).
   ENDMETHOD.
 
   METHOD is_standard_sap.
@@ -557,48 +532,35 @@ CLASS ltcl_units IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( mo_unit ).
     set_unit( `PROG|ZPROG1` ).
     cl_abap_unit_assert=>assert_bound( mo_unit ).
+
+    "CDS
+    set_unit( `DDLS|UNKNOWN` ).
+    cl_abap_unit_assert=>assert_initial( mo_unit ).
+    set_unit( `DDLS|ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_bound( mo_unit ).
+    set_unit( `DDLS|ZCDSFUNC1` ).
+    cl_abap_unit_assert=>assert_bound( mo_unit ).
+
+    "Tabel
+    set_unit( `TABL|UNKNOWN` ).
+    cl_abap_unit_assert=>assert_initial( mo_unit ).
+    set_unit( `TABL|ZTAB1` ).
+    cl_abap_unit_assert=>assert_bound( mo_unit ).
   ENDMETHOD.
 
   METHOD get_by_full_name.
-    "Klasse
     set_unit( `\TY:ZCLASS1` ).
     cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\TY:ZCLASS1\ME:METHOD` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\TY:ZCLASS1\IN:ZINTERFACE1\ME:METHOD` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
 
-    "Interface
-    set_unit( `\TY:ZINTERFACE1` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\TY:ZINTERFACE1\ME:METHOD` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-
-    "Functie
-    set_unit( `\FU:ZFUNC1` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\FG:ZFUGR1\FU:ZFUNC1` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-
-    "Functiegroep
-    set_unit( `\FG:ZFUGR1` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\FG:ZFUGR1\FO:FORM` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-
-    "Programma
-    set_unit( `\PR:ZPROG1` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\PR:ZPROG1\FO:FORM` ).
-    cl_abap_unit_assert=>assert_bound( mo_unit ).
-    set_unit( `\PR:ZPROG25\TY:LCLASS1\IN:LINTERFACE1\ME:METHOD` ).
+    "Geen controle op het bestaan van het object
+    set_unit( `\TY:UNKNOWN` ).
     cl_abap_unit_assert=>assert_bound( mo_unit ).
   ENDMETHOD.
 
 ENDCLASS.
 
 *--------------------------------------------------------------------*
-CLASS ltcl_func DEFINITION
+CLASS ltcl_ddls_func DEFINITION
 *--------------------------------------------------------------------*
   FINAL
   FOR TESTING
@@ -608,87 +570,150 @@ CLASS ltcl_func DEFINITION
 
   PRIVATE SECTION.
     METHODS:
-      called_by_form FOR TESTING,
-      called_by_function FOR TESTING,
+      called_by_cds FOR TESTING,
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
-      calls_form FOR TESTING,
-      calls_function FOR TESTING,
-      calls_method FOR TESTING,
-      calls_program FOR TESTING.
+      calls_method FOR TESTING.
 
 ENDCLASS.
 
 *--------------------------------------------------------------------*
-CLASS ltcl_func IMPLEMENTATION.
+CLASS ltcl_ddls_func IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
-  METHOD called_by_form.
-    set_unit( `FUNC|ZFUNC21` ).
+  METHOD called_by_cds.
+    set_unit( `DDLS|ZCDSFUNC1` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`   target = `\FG:ZFUGR2\FU:ZFUNC21` )
-                            ( source = `\FG:ZFUGR2\FO:FORM`   target = `\FG:ZFUGR2\FU:ZFUNC21` )
-                            ( source = `\PR:ZPROG1F\FO:FORM`  target = `\FG:ZFUGR2\FU:ZFUNC21` ) ) ).
-  ENDMETHOD.
-
-  METHOD called_by_function.
-    set_unit( `FUNC|ZFUNC22` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\FG:ZFUGR2\FU:ZFUNC22` ) ) ).
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView5`  target = `\TY:zCdsFunc1` ) ) ).
   ENDMETHOD.
 
   METHOD called_by_method.
-    set_unit( `FUNC|ZFUNC23` ).
+    set_unit( `DDLS|ZCDSFUNC3` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\FG:ZFUGR2\FU:ZFUNC23` ) ) ).
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS5\ME:METHOD2`  target = `\TY:zCdsFunc3` ) ) ).
   ENDMETHOD.
 
   METHOD called_by_program.
-    set_unit( `FUNC|ZFUNC24` ).
+    set_unit( `DDLS|ZCDSFUNC2` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\FG:ZFUGR2\FU:ZFUNC24` ) ) ).
-  ENDMETHOD.
-
-  METHOD calls_form.
-    set_unit( `FUNC|ZFUNC21` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_calls = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\FG:ZFUGR2\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\FG:ZFUGR3\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\PR:ZPROG3F\FO:FORM` ) ) ).
-  ENDMETHOD.
-
-  METHOD calls_function.
-    set_unit( `FUNC|ZFUNC22` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_calls = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC22`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG44`  target = `\TY:zCdsFunc2` ) ) ).
   ENDMETHOD.
 
   METHOD calls_method.
-    set_unit( `FUNC|ZFUNC23` ).
+    set_unit( `DDLS|ZCDSFUNC1` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC23`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
+      exp = VALUE tt_calls( ( source = `\TY:zCdsFunc1`  target = `\TY:ZAMDP\ME:METHOD1` ) ) ).
   ENDMETHOD.
 
-  METHOD calls_program.
-    set_unit( `FUNC|ZFUNC24` ).
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_ddls_view DEFINITION
+*--------------------------------------------------------------------*
+  FINAL
+  FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS
+  INHERITING FROM ltcl_unit.
+
+  PRIVATE SECTION.
+    METHODS:
+      called_by_cds FOR TESTING,
+      called_by_form FOR TESTING,
+      called_by_function FOR TESTING,
+      called_by_method FOR TESTING,
+      called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
+      calls_table FOR TESTING.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_ddls_view IMPLEMENTATION.
+*--------------------------------------------------------------------*
+
+  METHOD called_by_cds.
+    set_unit( `DDLS|ZCDSVIEW3` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView2`  target = `\TY:zCdsView3` ) ) ).
+
+    "zCdsView6 niet omdat _DefaultAddresses weliswaar voorkomt in de velden maar niet in de select of via associations
+    set_unit( `DDLS|I_BUSINESSPARTNERDEFAULTADDR` ).
+    cl_abap_unit_assert=>assert_initial(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls ).
+  ENDMETHOD.
+
+  METHOD called_by_form.
+    set_unit( `DDLS|ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FO:FORM`   target = `\TY:zCdsView1` )
+                            ( source = `\PR:ZPROG4F\FO:FORM`  target = `\TY:zCdsView1` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_function.
+    set_unit( `DDLS|ZCDSVIEW2` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FU:ZFUNC5`  target = `\TY:zCdsView2` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_method.
+    set_unit( `DDLS|ZCDSVIEW4` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG42\TY:LCLASS\ME:METHOD`                target = `\TY:zCdsView4` )
+                            ( source = `\PR:ZPROG43\TY:LCLASS\IN:LINTERFACE\ME:METHOD`  target = `\TY:zCdsView4` )
+                            ( source = `\TY:ZCLASS5\ME:METHOD1`                         target = `\TY:zCdsView4` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_program.
+    set_unit( `DDLS|ZCDSVIEW5` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG41`  target = `\TY:zCdsView5` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_cds.
+    set_unit( `DDLS|ZCDSVIEW2` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC24`  target = `\PR:ZPROG3` ) ) ).
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView2`  target = `\TY:zCdsView3` ) ) ).
+
+    "Standaard SAP ziet ook I_BusinessPartnerDefaultAddr en I_Address als onderdeel vanwege de gebruikte velden
+    set_unit( `DDLS|ZCDSVIEW6` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          include_sap_objects = abap_true
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView6`  target = `\TY:BUT001` )
+                            ( source = `\TY:zCdsView6`  target = `\TY:I_BusinessPartner` )
+                            ( source = `\TY:zCdsView6`  target = `\TY:I_Username` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_table.
+    set_unit( `DDLS|ZCDSVIEW1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView1`  target = `\TY:ZTAB1` )
+                            ( source = `\TY:zCdsView1`  target = `\TY:ZTAB2` ) ) ).
   ENDMETHOD.
 
 ENDCLASS.
@@ -704,35 +729,14 @@ CLASS ltcl_fugr DEFINITION
 
   PRIVATE SECTION.
     METHODS:
-      calls FOR TESTING,
-      called_by FOR TESTING.
+      called_by FOR TESTING,
+      calls FOR TESTING.
 
 ENDCLASS.
 
 *--------------------------------------------------------------------*
 CLASS ltcl_fugr IMPLEMENTATION.
 *--------------------------------------------------------------------*
-
-  METHOD calls.
-    set_unit( `FUGR|ZFUGR2` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_calls = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM`    target = `\FG:ZFUGR2\FO:FORM1` )
-                            ( source = `\FG:ZFUGR2\FO:FORM`    target = `\FG:ZFUGR2\FU:ZFUNC21` )
-                            ( source = `\FG:ZFUGR2\FO:FORM1`   target = `\FG:ZFUGR2\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FO:FORM1`   target = `\FG:ZFUGR3\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FO:FORM1`   target = `\PR:ZPROG3F\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FO:FORM2`   target = `\FG:ZFUGR3\FU:ZFUNC3` )
-                            ( source = `\FG:ZFUGR2\FO:FORM3`   target = `\TY:ZCLASS3\ME:METHOD` )
-                            ( source = `\FG:ZFUGR2\FO:FORM4`   target = `\PR:ZPROG3` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC21` target = `\FG:ZFUGR2\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC21` target = `\FG:ZFUGR3\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC21` target = `\PR:ZPROG3F\FO:FORM` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC22` target = `\FG:ZFUGR3\FU:ZFUNC3` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC23` target = `\TY:ZCLASS3\ME:METHOD` )
-                            ( source = `\FG:ZFUGR2\FU:ZFUNC24` target = `\PR:ZPROG3` ) ) ).
-  ENDMETHOD.
 
   METHOD called_by.
     set_unit( `FUGR|ZFUGR2` ).
@@ -756,6 +760,27 @@ CLASS ltcl_fugr IMPLEMENTATION.
                             ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\FG:ZFUGR2\FU:ZFUNC23` ) ) ).
   ENDMETHOD.
 
+  METHOD calls.
+    set_unit( `FUGR|ZFUGR2` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FO:FORM`    target = `\FG:ZFUGR2\FO:FORM1` )
+                            ( source = `\FG:ZFUGR2\FO:FORM`    target = `\FG:ZFUGR2\FU:ZFUNC21` )
+                            ( source = `\FG:ZFUGR2\FO:FORM1`   target = `\FG:ZFUGR2\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FO:FORM1`   target = `\FG:ZFUGR3\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FO:FORM1`   target = `\PR:ZPROG3F\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FO:FORM2`   target = `\FG:ZFUGR3\FU:ZFUNC3` )
+                            ( source = `\FG:ZFUGR2\FO:FORM3`   target = `\TY:ZCLASS3\ME:METHOD` )
+                            ( source = `\FG:ZFUGR2\FO:FORM4`   target = `\PR:ZPROG3` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC21` target = `\FG:ZFUGR2\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC21` target = `\FG:ZFUGR3\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC21` target = `\PR:ZPROG3F\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC22` target = `\FG:ZFUGR3\FU:ZFUNC3` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC23` target = `\TY:ZCLASS3\ME:METHOD` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC24` target = `\PR:ZPROG3` ) ) ).
+  ENDMETHOD.
+
 ENDCLASS.
 
 *--------------------------------------------------------------------*
@@ -773,6 +798,7 @@ CLASS ltcl_fugr_form DEFINITION
       called_by_function FOR TESTING,
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
       calls_form FOR TESTING,
       calls_function FOR TESTING,
       calls_method FOR TESTING,
@@ -818,6 +844,14 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\FG:ZFUGR2\FO:FORM4` ) ) ).
   ENDMETHOD.
 
+  METHOD calls_cds.
+    set_unit( `FUGR|ZFUGR5|FORM` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FO:FORM`  target = `\TY:zCdsView1` ) ) ).
+  ENDMETHOD.
+
   METHOD calls_form.
     set_unit( `FUGR|ZFUGR2|FORM1` ).
     cl_abap_unit_assert=>assert_equals(
@@ -855,6 +889,111 @@ CLASS ltcl_fugr_form IMPLEMENTATION.
 ENDCLASS.
 
 *--------------------------------------------------------------------*
+CLASS ltcl_func DEFINITION
+*--------------------------------------------------------------------*
+  FINAL
+  FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS
+  INHERITING FROM ltcl_unit.
+
+  PRIVATE SECTION.
+    METHODS:
+      called_by_form FOR TESTING,
+      called_by_function FOR TESTING,
+      called_by_method FOR TESTING,
+      called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
+      calls_form FOR TESTING,
+      calls_function FOR TESTING,
+      calls_method FOR TESTING,
+      calls_program FOR TESTING.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_func IMPLEMENTATION.
+*--------------------------------------------------------------------*
+
+  METHOD called_by_form.
+    set_unit( `FUNC|ZFUNC21` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FO:FORM`   target = `\FG:ZFUGR2\FU:ZFUNC21` )
+                            ( source = `\FG:ZFUGR2\FO:FORM`   target = `\FG:ZFUGR2\FU:ZFUNC21` )
+                            ( source = `\PR:ZPROG1F\FO:FORM`  target = `\FG:ZFUGR2\FU:ZFUNC21` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_function.
+    set_unit( `FUNC|ZFUNC22` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR1\FU:ZFUNC1`  target = `\FG:ZFUGR2\FU:ZFUNC22` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_method.
+    set_unit( `FUNC|ZFUNC23` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS1\ME:METHOD`  target = `\FG:ZFUGR2\FU:ZFUNC23` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_program.
+    set_unit( `FUNC|ZFUNC24` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\FG:ZFUGR2\FU:ZFUNC24` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_cds.
+    set_unit( `FUNC|ZFUNC5` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FU:ZFUNC5`  target = `\TY:zCdsView2` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_form.
+    set_unit( `FUNC|ZFUNC21` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\FG:ZFUGR2\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\FG:ZFUGR3\FO:FORM` )
+                            ( source = `\FG:ZFUGR2\FU:ZFUNC21`  target = `\PR:ZPROG3F\FO:FORM` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_function.
+    set_unit( `FUNC|ZFUNC22` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC22`  target = `\FG:ZFUGR3\FU:ZFUNC3` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_method.
+    set_unit( `FUNC|ZFUNC23` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC23`  target = `\TY:ZCLASS3\ME:METHOD` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_program.
+    set_unit( `FUNC|ZFUNC24` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR2\FU:ZFUNC24`  target = `\PR:ZPROG3` ) ) ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
 CLASS ltcl_meth DEFINITION
 *--------------------------------------------------------------------*
   FINAL
@@ -869,6 +1008,7 @@ CLASS ltcl_meth DEFINITION
       called_by_function FOR TESTING,
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
       calls_form FOR TESTING,
       calls_function FOR TESTING,
       calls_method FOR TESTING,
@@ -914,6 +1054,14 @@ CLASS ltcl_meth IMPLEMENTATION.
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1` target = `\TY:ZCLASS2\ME:METHOD4` ) ) ).
   ENDMETHOD.
 
+  METHOD calls_cds.
+    set_unit( `CLAS|ZCLASS5|METHOD1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS5\ME:METHOD1`  target = `\TY:zCdsView4` ) ) ).
+  ENDMETHOD.
+
   METHOD calls_form.
     set_unit( `CLAS|ZCLASS2|METHOD1` ).
     cl_abap_unit_assert=>assert_equals(
@@ -951,6 +1099,44 @@ CLASS ltcl_meth IMPLEMENTATION.
 ENDCLASS.
 
 *--------------------------------------------------------------------*
+CLASS ltcl_meth_amdp DEFINITION
+*--------------------------------------------------------------------*
+  FINAL
+  FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS
+  INHERITING FROM ltcl_unit.
+
+  PRIVATE SECTION.
+    METHODS:
+      called_by_cds FOR TESTING,
+      calls_table FOR TESTING.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_meth_amdp IMPLEMENTATION.
+*--------------------------------------------------------------------*
+
+  METHOD called_by_cds.
+    set_unit( `CLAS|ZAMDP|METHOD1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsFunc1`  target = `\TY:ZAMDP\ME:METHOD1` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_table.
+    set_unit( `CLAS|ZAMDP|METHOD1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZAMDP\ME:METHOD1`  target = `\TY:ZTAB5` ) ) ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
 CLASS ltcl_prog DEFINITION
 *--------------------------------------------------------------------*
   FINAL
@@ -965,6 +1151,7 @@ CLASS ltcl_prog DEFINITION
       called_by_function FOR TESTING,
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
       calls_form FOR TESTING,
       calls_function FOR TESTING,
       calls_method FOR TESTING,
@@ -1008,6 +1195,21 @@ CLASS ltcl_prog IMPLEMENTATION.
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\PR:ZPROG24` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_cds.
+    set_unit( `PROG|ZPROG41` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG41`  target = `\TY:zCdsView5` )       "select
+                            ( source = `\PR:ZPROG41`  target = `\TY:zCdsView6` ) ) ).  "data definitie
+
+    set_unit( `PROG|ZPROG44` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG44`  target = `\TY:zCdsFunc2` ) ) ).
   ENDMETHOD.
 
   METHOD calls_form.
@@ -1061,6 +1263,7 @@ CLASS ltcl_prog_form DEFINITION
       called_by_function FOR TESTING,
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
       calls_form FOR TESTING,
       calls_function FOR TESTING,
       calls_method FOR TESTING,
@@ -1104,6 +1307,14 @@ CLASS ltcl_prog_form IMPLEMENTATION.
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG1`  target = `\PR:ZPROG24F\FO:FORM` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_cds.
+    set_unit( `PROG|ZPROG4F|FORM` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG4F\FO:FORM`  target = `\TY:zCdsView1` ) ) ).
   ENDMETHOD.
 
   METHOD calls_form.
@@ -1157,6 +1368,7 @@ CLASS ltcl_prog_meth DEFINITION
       called_by_function FOR TESTING,
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
+      calls_cds FOR TESTING,
       calls_form FOR TESTING,
       calls_function FOR TESTING,
       calls_method FOR TESTING,
@@ -1195,6 +1407,20 @@ CLASS ltcl_prog_meth IMPLEMENTATION.
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG25`  target = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD4` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_cds.
+    set_unit( `\PR:ZPROG42\TY:LCLASS\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG42\TY:LCLASS\ME:METHOD`  target = `\TY:zCdsView4` ) ) ).
+
+    set_unit( `\PR:ZPROG43\TY:LCLASS\IN:LINTERFACE\ME:METHOD` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG43\TY:LCLASS\IN:LINTERFACE\ME:METHOD`  target = `\TY:zCdsView4` ) ) ).
   ENDMETHOD.
 
   METHOD calls_form.
@@ -1246,44 +1472,20 @@ CLASS ltcl_specials DEFINITION
 
   PRIVATE SECTION.
     METHODS:
-      includes FOR TESTING,
-      inheritance FOR TESTING,
       alias FOR TESTING,
+      includes FOR TESTING,
+      include_sap_objects FOR TESTING,
+      inheritance FOR TESTING,
       interfaces FOR TESTING,
       local_classes FOR TESTING,
-      local_interfaces FOR TESTING,
-      include_sap_objects FOR TESTING.
+      local_forms FOR TESTING,
+      local_interfaces FOR TESTING.
 
 ENDCLASS.
 
 *--------------------------------------------------------------------*
 CLASS ltcl_specials IMPLEMENTATION.
 *--------------------------------------------------------------------*
-
-  METHOD includes.
-    set_unit( `PROG|ZPROG26` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_calls = 1
-                          depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\PR:ZPROG1\FO:FORM`   target = `\PR:ZPROG26\FO:FORM1` )
-                            ( source = `\PR:ZPROG26`          target = `\PR:ZPROG26\FO:FORM` )
-                            ( source = `\PR:ZPROG26\FO:FORM`  target = `\PR:ZPROG26\FO:FORM2` ) ) ).
-  ENDMETHOD.
-
-  METHOD inheritance.
-    set_unit( `CLAS|ZCLASS4A` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = mo_main->run( unit = mo_unit
-                          depth_calls = 1
-                          depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\TY:ZCLASS4A\ME:CONSTRUCTOR`  target = `\FG:ZFUGR3\FU:ZFUNC3` )
-                            ( source = `\TY:ZCLASS4A\ME:METHOD3`      target = `\TY:ZCLASS4\ME:METHOD3` )
-                            ( source = `\TY:ZCLASS4A\ME:METHOD4`      target = `\TY:ZCLASS4A\ME:METHOD3` )
-                            ( source = `\TY:ZCLASS4A\ME:METHOD4`      target = `\TY:ZCLASS4\ME:METHOD3` )
-                            ( source = `\TY:ZCLASS4A\ME:METHOD4`      target = `\TY:ZCLASS4\ME:METHOD4` )
-                            ( source = `\TY:ZCLASS4A\ME:METHOD5`      target = `\TY:ZCLASS4\ME:METHOD5` ) ) ).
-  ENDMETHOD.
 
   METHOD alias.
     set_unit( `CLAS|ZCLASS4B` ).
@@ -1300,6 +1502,45 @@ CLASS ltcl_specials IMPLEMENTATION.
                             ( source = `\TY:ZCLASS4B\IN:ZINTERFACE4A\ME:METHOD1`  target = `\TY:ZINTERFACE4B\ME:METHOD3` )
                             ( source = `\TY:ZCLASS4B\IN:ZINTERFACE4A\ME:METHOD1`  target = `\TY:ZINTERFACE4B\ME:METHOD4` )
                             ( source = `\TY:ZCLASS4B\IN:ZINTERFACE4A\ME:METHOD1`  target = `\TY:ZINTERFACE4B\ME:METHOD5` ) ) ).
+  ENDMETHOD.
+
+  METHOD includes.
+    set_unit( `PROG|ZPROG26` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG1\FO:FORM`   target = `\PR:ZPROG26\FO:FORM1` )
+                            ( source = `\PR:ZPROG26`          target = `\PR:ZPROG26\FO:FORM` )
+                            ( source = `\PR:ZPROG26\FO:FORM`  target = `\PR:ZPROG26\FO:FORM2` ) ) ).
+  ENDMETHOD.
+
+  METHOD include_sap_objects.
+    set_unit( `PROG|ZPROG3` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1
+                          include_sap_objects = abap_true )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG3`  target = `\FG:SRFC\FU:RFC_SYSTEM_INFO` ) ) ).
+
+    set_unit( `FUNC|RFC_SYSTEM_INFO` ).
+    cl_abap_unit_assert=>assert_initial( mo_main->run( unit = mo_unit
+                                                       depth_calls = 2
+                                                       include_sap_objects = abap_false )-calls ).
+  ENDMETHOD.
+
+  METHOD inheritance.
+    set_unit( `CLAS|ZCLASS4A` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS4A\ME:CONSTRUCTOR`  target = `\FG:ZFUGR3\FU:ZFUNC3` )
+                            ( source = `\TY:ZCLASS4A\ME:METHOD3`      target = `\TY:ZCLASS4\ME:METHOD3` )
+                            ( source = `\TY:ZCLASS4A\ME:METHOD4`      target = `\TY:ZCLASS4A\ME:METHOD3` )
+                            ( source = `\TY:ZCLASS4A\ME:METHOD4`      target = `\TY:ZCLASS4\ME:METHOD3` )
+                            ( source = `\TY:ZCLASS4A\ME:METHOD4`      target = `\TY:ZCLASS4\ME:METHOD4` )
+                            ( source = `\TY:ZCLASS4A\ME:METHOD5`      target = `\TY:ZCLASS4\ME:METHOD5` ) ) ).
   ENDMETHOD.
 
   METHOD interfaces.
@@ -1344,6 +1585,23 @@ CLASS ltcl_specials IMPLEMENTATION.
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS4\ME:METHOD1`  target = `\TY:ZCLASS4\TY:LCLASS\ME:METHOD` ) ) ).
   ENDMETHOD.
 
+  METHOD local_forms.
+    set_unit( `FUNC|ZFUNC41` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR4\FU:ZFUNC41`  target = `\FG:ZFUGR4\FO:GLOBAL_FORM` )
+                            ( source = `\FG:ZFUGR4\FU:ZFUNC41`  target = `\FG:ZFUGR4\FO:LOCAL_FORM` )
+                            ( source = `\FG:ZFUGR4\FU:ZFUNC41`  target = `\FG:ZFUGR4\FU:ZFUNC42` ) ) ).
+    "NB, SAP analyseert *alle* code in de functie dus ook de FORM-code die na de ENDFUNCTION komt!
+
+    set_unit( `FUNC|ZFUNC42` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR4\FO:LOCAL_FORM`  target = `\FG:ZFUGR4\FU:ZFUNC42` ) ) ).
+  ENDMETHOD.
+
   METHOD local_interfaces.
     set_unit( `\PR:ZPROG25\TY:LCLASS2\IN:LINTERFACE2\ME:METHOD` ).
     cl_abap_unit_assert=>assert_equals(
@@ -1372,18 +1630,42 @@ CLASS ltcl_specials IMPLEMENTATION.
                             ( source = `\PR:ZPROG25\TY:LCLASS2\ME:METHOD5`                target = `\PR:ZPROG25\TY:LINTERFACE3\ME:METHOD3` ) ) ).
   ENDMETHOD.
 
-  METHOD include_sap_objects.
-    set_unit( `PROG|ZPROG3` ).
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_tabl DEFINITION
+*--------------------------------------------------------------------*
+  FINAL
+  FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS
+  INHERITING FROM ltcl_unit.
+
+  PRIVATE SECTION.
+    METHODS:
+      called_by_amdp_method FOR TESTING,
+      called_by_cds FOR TESTING.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_tabl IMPLEMENTATION.
+*--------------------------------------------------------------------*
+
+  METHOD called_by_amdp_method.
+    set_unit( `TABL|ZTAB5` ).
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
-                          depth_calls = 1
-                          include_sap_objects = abap_true )-calls
-      exp = VALUE tt_calls( ( source = `\PR:ZPROG3`  target = `\FG:SRFC\FU:RFC_SYSTEM_INFO` ) ) ).
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZAMDP\ME:METHOD1`  target = `\TY:ZTAB5` ) ) ).
+  ENDMETHOD.
 
-    set_unit( `FUNC|RFC_SYSTEM_INFO` ).
-    cl_abap_unit_assert=>assert_initial( mo_main->run( unit = mo_unit
-                                                       depth_calls = 2
-                                                       include_sap_objects = abap_false )-calls ).
+  METHOD called_by_cds.
+    set_unit( `TABL|ZTAB1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView1`  target = `\TY:ZTAB1` ) ) ).
   ENDMETHOD.
 
 ENDCLASS.

@@ -1,0 +1,17 @@
+REPORT zprog43.
+
+INTERFACE linterface.
+  CLASS-METHODS:
+    method.
+ENDINTERFACE.
+
+CLASS lclass DEFINITION.
+  PUBLIC SECTION.
+    INTERFACES linterface.
+ENDCLASS.
+
+CLASS lclass IMPLEMENTATION.
+  METHOD linterface~method.
+    SELECT COUNT( * ) FROM zcdsview4.
+  ENDMETHOD.
+ENDCLASS.

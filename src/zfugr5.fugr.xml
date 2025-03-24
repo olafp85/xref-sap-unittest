@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>.</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZFUGR5F01</SOBJ_NAME>
+    <SOBJ_NAME>LZFUGR5TOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZFUGR5</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZFUNC5</FUNCNAME>
+     <SHORT_TEXT>.</SHORT_TEXT>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

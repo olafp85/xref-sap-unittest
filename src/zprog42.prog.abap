@@ -1,0 +1,13 @@
+REPORT zprog42.
+
+CLASS lclass DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS:
+      method.
+ENDCLASS.
+
+CLASS lclass IMPLEMENTATION.
+  METHOD method.
+    SELECT COUNT( * ) FROM zcdsview4.
+  ENDMETHOD.
+ENDCLASS.
