@@ -10,6 +10,8 @@ public section.
   class-methods METHOD3
     importing
       !PARAMETER type ref to ZCDSVIEW4 .
+  class-methods METHOD4 .
+  class-methods METHOD5 .
 protected section.
 private section.
 ENDCLASS.
@@ -31,5 +33,15 @@ CLASS ZCLASS5 IMPLEMENTATION.
 
 
   METHOD method3.
+  ENDMETHOD.
+
+
+  METHOD method4.
+    SELECT COUNT( * ) FROM zview7.
+  ENDMETHOD.
+
+
+  METHOD method5.
+    SELECT COUNT( * ) FROM zcdsview7.
   ENDMETHOD.
 ENDCLASS.

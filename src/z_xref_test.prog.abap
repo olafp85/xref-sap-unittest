@@ -445,6 +445,32 @@ CLASS ltcl_unit IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `TABL` ).
     cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZTAB1' ).
 
+    "View
+    set_unit( `VIEW|ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `VIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZVIEW' ).
+
+    set_unit( `\TY:ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `VIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZVIEW' ).
+
+    "Door CDS gegenereerde view
+    set_unit( `VIEW|ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:zCdsView6\TY:ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `VIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZVIEW6' ).
+
+    set_unit( `\TY:ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:zCdsView6\TY:ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->full_name    exp = `\TY:ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->type         exp = `VIEW` ).
+    cl_abap_unit_assert=>assert_equals( act = mo_unit->get_name( )  exp = 'ZVIEW6' ).
+
     "Methode GET_BY_FULL_NAME doet geen controle op het bestaan van het object
     set_unit( `\TY:UNKNOWN` ).
     cl_abap_unit_assert=>assert_equals( act = mo_unit->id           exp = `\TY:UNKNOWN` ).
@@ -546,6 +572,12 @@ CLASS ltcl_units IMPLEMENTATION.
     cl_abap_unit_assert=>assert_initial( mo_unit ).
     set_unit( `TABL|ZTAB1` ).
     cl_abap_unit_assert=>assert_bound( mo_unit ).
+
+    "View
+    set_unit( `VIEW|UNKNOWN` ).
+    cl_abap_unit_assert=>assert_initial( mo_unit ).
+    set_unit( `VIEW|ZVIEW1` ).
+    cl_abap_unit_assert=>assert_bound( mo_unit ).
   ENDMETHOD.
 
   METHOD get_by_full_name.
@@ -632,7 +664,8 @@ CLASS ltcl_ddls_view DEFINITION
       called_by_method FOR TESTING,
       called_by_program FOR TESTING,
       calls_cds FOR TESTING,
-      calls_table FOR TESTING.
+      calls_table FOR TESTING,
+      calls_view FOR TESTING.
 
 ENDCLASS.
 
@@ -659,8 +692,10 @@ CLASS ltcl_ddls_view IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
-      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FO:FORM`   target = `\TY:zCdsView1` )
-                            ( source = `\PR:ZPROG4F\FO:FORM`  target = `\TY:zCdsView1` ) ) ).
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FO:FORM`    target = `\TY:zCdsView1` )
+                            ( source = `\PR:ZPROG4F\FO:FORM`   target = `\TY:zCdsView1` )
+                            ( source = `\TY:ZAMDP\ME:METHOD4`  target = `\TY:zCdsView1\TY:ZVIEW1` ) ) ).
+
   ENDMETHOD.
 
   METHOD called_by_function.
@@ -679,6 +714,14 @@ CLASS ltcl_ddls_view IMPLEMENTATION.
       exp = VALUE tt_calls( ( source = `\PR:ZPROG42\TY:LCLASS\ME:METHOD`                target = `\TY:zCdsView4` )
                             ( source = `\PR:ZPROG43\TY:LCLASS\IN:LINTERFACE\ME:METHOD`  target = `\TY:zCdsView4` )
                             ( source = `\TY:ZCLASS5\ME:METHOD1`                         target = `\TY:zCdsView4` ) ) ).
+
+    "Aanroep tevens via door CDS gegenereerde view
+    set_unit( `DDLS|ZCDSVIEW7` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS5\ME:METHOD4`  target = `\TY:zCdsView7\TY:ZVIEW7` )
+                            ( source = `\TY:ZCLASS5\ME:METHOD5`  target = `\TY:zCdsView7` ) ) ).
   ENDMETHOD.
 
   METHOD called_by_program.
@@ -714,6 +757,14 @@ CLASS ltcl_ddls_view IMPLEMENTATION.
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:zCdsView1`  target = `\TY:ZTAB1` )
                             ( source = `\TY:zCdsView1`  target = `\TY:ZTAB2` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_view.
+    set_unit( `DDLS|ZCDSVIEW7` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView7`  target = `\TY:zCdsView6\TY:ZVIEW6` ) ) ).
   ENDMETHOD.
 
 ENDCLASS.
@@ -1012,7 +1063,8 @@ CLASS ltcl_meth DEFINITION
       calls_form FOR TESTING,
       calls_function FOR TESTING,
       calls_method FOR TESTING,
-      calls_program FOR TESTING.
+      calls_program FOR TESTING,
+      calls_view FOR TESTING.
 
 ENDCLASS.
 
@@ -1096,6 +1148,14 @@ CLASS ltcl_meth IMPLEMENTATION.
       exp = VALUE tt_calls( ( source = `\TY:ZCLASS2\ME:METHOD4`  target = `\PR:ZPROG3` ) ) ).
   ENDMETHOD.
 
+  METHOD calls_view.
+    set_unit( `CLAS|ZCLASS5|METHOD4` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS5\ME:METHOD4`  target = `\TY:zCdsView7\TY:ZVIEW7` ) ) ).
+  ENDMETHOD.
+
 ENDCLASS.
 
 *--------------------------------------------------------------------*
@@ -1110,7 +1170,8 @@ CLASS ltcl_meth_amdp DEFINITION
   PRIVATE SECTION.
     METHODS:
       called_by_cds FOR TESTING,
-      calls_table FOR TESTING.
+      calls_table FOR TESTING,
+      calls_view FOR TESTING.
 
 ENDCLASS.
 
@@ -1132,6 +1193,14 @@ CLASS ltcl_meth_amdp IMPLEMENTATION.
       act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:ZAMDP\ME:METHOD1`  target = `\TY:ZTAB5` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_view.
+    set_unit( `CLAS|ZAMDP|METHOD4` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZAMDP\ME:METHOD4`  target = `\TY:zCdsView1\TY:ZVIEW1` ) ) ).
   ENDMETHOD.
 
 ENDCLASS.
@@ -1203,7 +1272,7 @@ CLASS ltcl_prog IMPLEMENTATION.
       act = mo_main->run( unit = mo_unit
                           depth_calls = 1 )-calls
       exp = VALUE tt_calls( ( source = `\PR:ZPROG41`  target = `\TY:zCdsView5` )       "select
-                            ( source = `\PR:ZPROG41`  target = `\TY:zCdsView6` ) ) ).  "data definitie
+                            ( source = `\PR:ZPROG41`  target = `\TY:zCdsView6` ) ) ).  "data definitie, hoort er eigenlijk niet bij
 
     set_unit( `PROG|ZPROG44` ).
     cl_abap_unit_assert=>assert_equals(
@@ -1666,6 +1735,81 @@ CLASS ltcl_tabl IMPLEMENTATION.
       act = mo_main->run( unit = mo_unit
                           depth_where_used = 1 )-calls
       exp = VALUE tt_calls( ( source = `\TY:zCdsView1`  target = `\TY:ZTAB1` ) ) ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_view DEFINITION
+*--------------------------------------------------------------------*
+  FINAL
+  FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS
+  INHERITING FROM ltcl_unit.
+
+  PRIVATE SECTION.
+    METHODS:
+      called_by_amdp_method FOR TESTING,
+      called_by_cds FOR TESTING,
+      called_by_method FOR TESTING,
+      calls_cds FOR TESTING.
+
+ENDCLASS.
+
+*--------------------------------------------------------------------*
+CLASS ltcl_view IMPLEMENTATION.
+*--------------------------------------------------------------------*
+
+  METHOD called_by_amdp_method.
+    set_unit( `VIEW|ZVIEW1` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\FG:ZFUGR5\FO:FORM`    target = `\TY:zCdsView1` )
+                            ( source = `\PR:ZPROG4F\FO:FORM`   target = `\TY:zCdsView1` )
+                            ( source = `\TY:ZAMDP\ME:METHOD4`  target = `\TY:zCdsView1\TY:ZVIEW1` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_cds.
+    "Door CDS gegenereerde view
+    set_unit( `VIEW|ZVIEW6` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\PR:ZPROG41`    target = `\TY:zCdsView6` )  "data definitie, bijvangst
+                            ( source = `\TY:zCdsView7`  target = `\TY:zCdsView6\TY:ZVIEW6` ) ) ).
+
+    "Reguliere view
+    set_unit( `VIEW|ZVIEW` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView8`  target = `\TY:ZVIEW` ) ) ).
+  ENDMETHOD.
+
+  METHOD called_by_method.
+    set_unit( `VIEW|ZVIEW7` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_where_used = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:ZCLASS5\ME:METHOD4`  target = `\TY:zCdsView7\TY:ZVIEW7` )
+                            ( source = `\TY:ZCLASS5\ME:METHOD5`  target = `\TY:zCdsView7` ) ) ).
+  ENDMETHOD.
+
+  METHOD calls_cds.
+    "Door CDS gegenereerde view
+    set_unit( `VIEW|ZVIEW8` ).
+    cl_abap_unit_assert=>assert_equals(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls
+      exp = VALUE tt_calls( ( source = `\TY:zCdsView8\TY:ZVIEW8`  target = `\TY:ZVIEW` ) ) ).
+
+    "Reguliere view
+    set_unit( `VIEW|ZVIEW` ).
+    cl_abap_unit_assert=>assert_initial(
+      act = mo_main->run( unit = mo_unit
+                          depth_calls = 1 )-calls ).
   ENDMETHOD.
 
 ENDCLASS.

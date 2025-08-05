@@ -6,7 +6,8 @@ CLASS zamdp DEFINITION PUBLIC FINAL CREATE PUBLIC.
     CLASS-METHODS:
       method1 FOR TABLE FUNCTION zcdsfunc1,
       method2 FOR TABLE FUNCTION zcdsfunc2,
-      method3 FOR TABLE FUNCTION zcdsfunc3.
+      method3 FOR TABLE FUNCTION zcdsfunc3,
+      method4 FOR TABLE FUNCTION zcdsfunc4.
 
 ENDCLASS.
 
@@ -41,6 +42,16 @@ CLASS zamdp IMPLEMENTATION.
     USING ztab6.
 
     RETURN SELECT * FROM ztab6;
+  ENDMETHOD.
+
+  METHOD method4
+    BY DATABASE FUNCTION
+    FOR HDB
+    LANGUAGE SQLSCRIPT
+    OPTIONS READ-ONLY
+    USING zview1.
+
+    RETURN SELECT * FROM zview1;
   ENDMETHOD.
 
 ENDCLASS.
